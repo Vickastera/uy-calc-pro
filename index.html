@@ -3,46 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UY Calc Pro</title>
+  <title>IRPF Uruguay Pro</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-
 <body>
 
-<div class="app">
+  <div class="container">
+    <h1>💰 Calculadora IRPF Uruguay</h1>
 
-  <h1>🇺🇾 UY Calc Pro</h1>
-  <p>Calculadora laboral inteligente</p>
+    <p>Ingresá tu salario nominal mensual</p>
 
-  <input type="number" id="sueldo" placeholder="Sueldo nominal">
+    <input id="salary" type="number" placeholder="Ej: 50000">
 
-  <select id="hijos">
-    <option value="0">Sin hijos</option>
-    <option value="1">Con hijos</option>
-  </select>
+    <button onclick="calculate()">Calcular</button>
 
-  <select id="tipo">
-    <option value="mensual">Mensual</option>
-    <option value="renuncia">Renuncia</option>
-    <option value="despido">Despido</option>
-  </select>
+    <div id="result" class="result"></div>
+  </div>
 
-  <button onclick="calcular()">Calcular</button>
-  <button onclick="descargarPDF()">Exportar PDF</button>
-
-  <div id="resultado"></div>
-
-  <canvas id="grafico"></canvas>
-
-  <button onclick="toggleDark()">🌙 Modo oscuro</button>
-
-</div>
+  <script src="app.js"></script>
+</body>
+</html>
 
 <script src="script.js"></script>
 </body>
