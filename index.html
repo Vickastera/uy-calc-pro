@@ -7,7 +7,12 @@
 
   <link rel="stylesheet" href="style.css">
 
+  <!-- Chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -24,10 +29,9 @@
     <option value="dismissal">Despido</option>
   </select>
 
-  <!-- TOGGLE PRO -->
+  <!-- TOGGLE HIJOS -->
   <div class="toggle-row">
     <span>Con hijos</span>
-
     <label class="switch">
       <input type="checkbox" id="children">
       <span class="slider"></span>
@@ -35,10 +39,20 @@
   </div>
 
   <button onclick="calculate()">Calcular</button>
+  <button onclick="downloadPDF()">Descargar PDF</button>
 
   <div id="result"></div>
 
+  <!-- GRAFICO -->
   <canvas id="chart"></canvas>
+
+  <!-- LEYENDA -->
+  <div class="legend">
+    <div><span class="dot irpf"></span> IRPF</div>
+    <div><span class="dot fonasa"></span> FONASA</div>
+    <div><span class="dot extra"></span> Extra</div>
+    <div><span class="dot neto"></span> Neto</div>
+  </div>
 
 </div>
 
