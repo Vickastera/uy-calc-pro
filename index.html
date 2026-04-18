@@ -7,11 +7,7 @@
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- Chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
@@ -32,7 +28,7 @@
   <!-- ANTIGÜEDAD -->
   <input id="years" type="number" placeholder="Años trabajados" style="display:none;">
 
-  <!-- TOGGLE -->
+  <!-- HIJOS -->
   <div class="toggle-row">
     <span>Con hijos</span>
     <label class="switch">
@@ -48,15 +44,9 @@
 
   <canvas id="chart"></canvas>
 
-  <div class="legend">
-    <div><span class="dot irpf"></span> IRPF</div>
-    <div><span class="dot fonasa"></span> FONASA</div>
-    <div><span class="dot extra"></span> Extra</div>
-    <div><span class="dot neto"></span> Neto</div>
-  </div>
-
 </div>
 
+<!-- SCRIPT SIEMPRE AL FINAL -->
 <script src="script.js"></script>
 
 </body>
