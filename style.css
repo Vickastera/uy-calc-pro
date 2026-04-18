@@ -1,5 +1,4 @@
 body {
-  margin: 0;
   font-family: Arial;
   background: #0f0f14;
   color: white;
@@ -12,121 +11,31 @@ body {
   padding: 30px;
 }
 
-.card {
-  background: #1c1c24;
-  padding: 20px;
-  border-radius: 12px;
-}
-
-input {
+input, select {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 10px;
-}
-
-/* segmented control */
-.segmented {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
-}
-
-.segmented button {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  cursor: pointer;
-  background: #2a2a35;
-  color: white;
-}
-
-.segmented .active {
-  background: #4c7dff;
+  padding: 10px;
+  margin: 8px 0;
 }
 
 button {
-  padding: 10px;
-  margin-top: 5px;
-  cursor: pointer;
   width: 100%;
-}
-
-/* toggle */
-.toggle {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.toggle input {
-  display: none;
-}
-
-.slider {
-  width: 40px;
-  height: 20px;
-  background: gray;
-  display: inline-block;
-  border-radius: 20px;
-  position: relative;
-}
-
-.slider::after {
-  content: "";
-  width: 16px;
-  height: 16px;
-  background: white;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  border-radius: 50%;
-  transition: .2s;
-}
-
-.toggle input:checked + .slider {
+  padding: 10px;
+  margin-top: 8px;
   background: #4c7dff;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
-.toggle input:checked + .slider::after {
-  transform: translateX(20px);
-}
-
-.result {
+#result {
   margin-top: 20px;
   background: #1c1c24;
   padding: 15px;
   border-radius: 10px;
 }
 
-/* PDF */
-.pdf {
-  position: absolute;
-  left: -9999px;
-  width: 400px;
-  background: white;
-  color: black;
-  padding: 20px;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #eee;
-  padding: 6px 0;
-}
-
-.total {
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.watermark {
-  position: absolute;
-  opacity: 0.05;
-  font-size: 50px;
-  transform: rotate(-30deg);
-  top: 40%;
-  left: 10%;
+canvas {
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 10px;
 }
