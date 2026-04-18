@@ -1,21 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-
-  <!-- 🔥 SOLUCION MOBILE -->
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>UY Calc Pro</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 
-  <!-- Chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -24,7 +16,7 @@
 
   <h1>💰 UY Calc Pro</h1>
 
-  <input id="salary" type="number" placeholder="Sueldo bruto" />
+  <input id="salary" type="number" placeholder="Sueldo bruto">
 
   <select id="type">
     <option value="salary">Sueldo normal</option>
@@ -32,17 +24,20 @@
     <option value="dismissal">Despido</option>
   </select>
 
-  <label class="check">
-    <input type="checkbox" id="children" />
-    Con hijos
-  </label>
+  <!-- TOGGLE PRO -->
+  <div class="toggle-row">
+    <span>Con hijos</span>
+
+    <label class="switch">
+      <input type="checkbox" id="children">
+      <span class="slider"></span>
+    </label>
+  </div>
 
   <button onclick="calculate()">Calcular</button>
-  <button onclick="downloadPDF()">Descargar PDF</button>
 
   <div id="result"></div>
 
-  <!-- 📊 gráfico -->
   <canvas id="chart"></canvas>
 
 </div>
