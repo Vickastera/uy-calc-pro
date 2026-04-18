@@ -1,90 +1,66 @@
+let type = "salary";
+
+function setType(t) {
+  type = t;
+
+  document.querySelectorAll(".segmented button").forEach(b => b.classList.remove("active"));
+  document.getElementById("t-" + t).classList.add("active");
+}
+
 function calculateIRPF(income) {
-  let tax = 0;
+  if (income <= 40750) return 0;
+  if (income <= 58250) return (income - 40750) * 0.10;
+  if (income <= 87500)
+    return 17500 * 0.10 + (income - 58250) * 0.15;
 
-  if (income <= 40750) {
-    tax = 0;
-  } else if (income <= 58250) {
-    tax = (income - 40750) * 0.10;
-  } else if (income <= 87500) {
-    tax = 17500 * 0.10 + (income - 58250) * 0.15;
-  } else if (income <= 175000) {
-    tax = 17500 * 0.10 + 29250 * 0.15 + (income - 87500) * 0.24;
-  } else {
-    tax =
-      17500 * 0.10 +
-      29250 * 0.15 +
-      87500 * 0.24 +
-      (income - 175000) * 0.25;
-  }
-
-  return tax;
+  return 17500 * 0.10 + 29250 * 0.15 + (income - 87500) * 0.24;
 }
 
 function calculateFONASA(income) {
   return income * 0.06;
 }
 
-function calculateNetSalary(income) {
-  const irpf = calculateIRPF(income);
-  const fonasa = calculateFONASA(income);
-  const aguinaldo = income / 12;
-  const renuncia = income * 0.2;
-
-  const total = irpf + fonasa;
-
-  return {
-    irpf,
-    fonasa,
-    aguinaldo,
-    renuncia,
-    neto: income - total
-  };
-}
-
 function calculate() {
   const salary = Number(document.getElementById("salary").value);
+  const children = document.getElementById("children").checked;
 
-  if (!salary) {
-    document.getElementById("result").innerHTML = "Ingresá un sueldo válido";
-    return;
-  }
+  if (!salary) return;
 
-  const result = calculateNetSalary(salary);
+  const irpf = calculateIRPF(salary);
+  const fonasa = calculateFONASA(salary);
+
+  let extra = 0;
+
+  if (type === "resignation") extra = salary * 0.2;
+  if (type === "dismissal") extra = salary * 0.4;
+
+  const neto = salary - irpf - fonasa + extra;
 
   document.getElementById("result").innerHTML = `
-    💰 IRPF: $${result.irpf.toFixed(2)}<br>
-    🏥 FONASA: $${result.fonasa.toFixed(2)}<br>
-    🎁 Aguinaldo: $${result.aguinaldo.toFixed(2)}<br>
-    🚪 Renuncia: $${result.renuncia.toFixed(2)}<br>
+    💰 Bruto: $${salary}<br>
+    📊 IRPF: $${irpf.toFixed(2)}<br>
+    🏥 FONASA: $${fonasa.toFixed(2)}<br>
+    ➕ Extra: $${extra.toFixed(2)}<br>
     <hr>
-    🧾 Neto: $${result.neto.toFixed(2)}
+    🧾 Neto: $${neto.toFixed(2)}
   `;
 
-  // cargar PDF data
   document.getElementById("p-bruto").innerText = salary;
-  document.getElementById("p-irpf").innerText = result.irpf.toFixed(2);
-  document.getElementById("p-fonasa").innerText = result.fonasa.toFixed(2);
-  document.getElementById("p-aguinaldo").innerText = result.aguinaldo.toFixed(2);
-  document.getElementById("p-renuncia").innerText = result.renuncia.toFixed(2);
-  document.getElementById("p-neto").innerText = result.neto.toFixed(2);
+  document.getElementById("p-irpf").innerText = irpf.toFixed(2);
+  document.getElementById("p-fonasa").innerText = fonasa.toFixed(2);
+  document.getElementById("p-extra").innerText = extra.toFixed(2);
+  document.getElementById("p-neto").innerText = neto.toFixed(2);
 }
 
 async function downloadPDF() {
   const element = document.getElementById("pdf");
 
-  const canvas = await html2canvas(element, {
-    scale: 2
-  });
-
-  const imgData = canvas.toDataURL("image/png");
+  const canvas = await html2canvas(element, { scale: 2 });
+  const img = canvas.toDataURL("image/png");
 
   const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF("p", "mm", "a4");
+  const pdf = new jsPDF();
 
-  const imgWidth = 190;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-  pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-
-  pdf.save("sueldo-uruguay-pro.pdf");
+  pdf.addImage(img, "PNG", 10, 10, 190, 0);
+  pdf.save("liquidacion.pdf");
 }
