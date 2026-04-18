@@ -1,68 +1,55 @@
-let chart;
+function calculateIRPF(income) {
+  let tax = 0;
 
-function calcular() {
-  const sueldo = parseFloat(document.getElementById("sueldo").value);
-  const hijos = parseInt(document.getElementById("hijos").value);
-  const tipo = document.getElementById("tipo").value;
+  if (income <= 40750) {
+    tax = 0;
+  } else if (income <= 58250) {
+    tax = (income - 40750) * 0.10;
+  } else if (income <= 87500) {
+    tax = 17500 * 0.10 + (income - 58250) * 0.15;
+  } else if (income <= 175000) {
+    tax = 17500 * 0.10 + 29250 * 0.15 + (income - 87500) * 0.24;
+  } else {
+    tax =
+      17500 * 0.10 +
+      29250 * 0.15 +
+      87500 * 0.24 +
+      (income - 175000) * 0.25;
+  }
 
-  if (!sueldo) return;
+  return tax;
+}
 
-  // 🧮 IRPF simple por tramos
-  let irpf = 0;
+function calculateFONASA(income) {
+  return income * 0.06;
+}
 
-  if (sueldo > 30000) irpf += (Math.min(sueldo, 50000) - 30000) * 0.1;
-  if (sueldo > 50000) irpf += (Math.min(sueldo, 80000) - 50000) * 0.15;
-  if (sueldo > 80000) irpf += (sueldo - 80000) * 0.2;
+function calculateNetSalary(income) {
+  const irpf = calculateIRPF(income);
+  const fonasa = calculateFONASA(income);
+  const total = irpf + fonasa;
 
-  let bps = sueldo * 0.15;
-  let fonasa = sueldo * (hijos ? 0.03 : 0.045);
+  return {
+    irpf,
+    fonasa,
+    neto: income - total
+  };
+}
 
-  let total = bps + fonasa + irpf;
-  let liquido = sueldo - total;
+function calculate() {
+  const salary = Number(document.getElementById("salary").value);
 
-  if (tipo === "renuncia") liquido += sueldo * 0.25;
-  if (tipo === "despido") liquido += sueldo * 0.5;
+  if (!salary) {
+    document.getElementById("result").innerHTML = "Ingresá un salario válido";
+    return;
+  }
 
-  document.getElementById("resultado").innerHTML = `
-    <h3>Líquido: $${liquido.toFixed(2)}</h3>
-    <p>BPS: ${bps.toFixed(2)}</p>
-    <p>FONASA: ${fonasa.toFixed(2)}</p>
-    <p>IRPF: ${irpf.toFixed(2)}</p>
+  const result = calculateNetSalary(salary);
+
+  document.getElementById("result").innerHTML = `
+    <p>💰 IRPF: $${result.irpf.toFixed(2)}</p>
+    <p>🏥 FONASA: $${result.fonasa.toFixed(2)}</p>
+    <hr>
+    <h3>🧾 Neto: $${result.neto.toFixed(2)}</h3>
   `;
-
-  renderChart(bps, fonasa, irpf);
-}
-
-// 📊 gráfico
-function renderChart(bps, fonasa, irpf) {
-  const ctx = document.getElementById("grafico");
-
-  if (chart) chart.destroy();
-
-  chart = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: ["BPS", "FONASA", "IRPF"],
-      datasets: [{
-        data: [bps, fonasa, irpf],
-        backgroundColor: ["#4f46e5", "#22c55e", "#ef4444"]
-      }]
-    }
-  });
-}
-
-// 🌙 modo oscuro
-function toggleDark() {
-  document.body.classList.toggle("dark");
-}
-
-// 📄 PDF export
-function descargarPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  doc.text("UY Calc Pro - Resultado", 10, 10);
-  doc.text(document.getElementById("resultado").innerText, 10, 20);
-
-  doc.save("liquidacion.pdf");
 }
