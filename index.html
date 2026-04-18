@@ -2,51 +2,68 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Sueldo Uruguay PRO</title>
+  <title>UY Calc Pro</title>
+
+  <link rel="stylesheet" href="style.css" />
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <h1>💰 Sueldo Uruguay PRO</h1>
+  <h1>💰 UY Calc Pro</h1>
 
-    <input id="salary" type="number" placeholder="Ingresá sueldo bruto" />
+  <div class="card">
 
-    <label>
-      <input type="checkbox" id="children" />
-      Con hijos
-    </label>
+    <input id="salary" type="number" placeholder="Sueldo bruto" />
+
+    <!-- TIPO (mejor UX que select) -->
+    <div class="segmented">
+      <button onclick="setType('salary')" class="active" id="t-salary">Sueldo</button>
+      <button onclick="setType('resignation')" id="t-resignation">Renuncia</button>
+      <button onclick="setType('dismissal')" id="t-dismissal">Despido</button>
+    </div>
+
+    <!-- HIJOS TOGGLE -->
+    <div class="toggle">
+      <label>
+        <input type="checkbox" id="children" />
+        <span class="slider"></span>
+      </label>
+      <span>Con hijos</span>
+    </div>
 
     <button onclick="calculate()">Calcular</button>
     <button onclick="downloadPDF()">Descargar PDF</button>
 
-    <div id="result"></div>
-
-    <!-- PDF TEMPLATE -->
-    <div id="pdf" class="pdf-card">
-      <h2>💰 Sueldo Uruguay PRO</h2>
-
-      <p><strong>Bruto:</strong> $<span id="p-bruto"></span></p>
-      <p><strong>IRPF:</strong> $<span id="p-irpf"></span></p>
-      <p><strong>FONASA:</strong> $<span id="p-fonasa"></span></p>
-      <p><strong>Aguinaldo:</strong> $<span id="p-aguinaldo"></span></p>
-      <p><strong>Renuncia:</strong> $<span id="p-renuncia"></span></p>
-
-      <hr />
-
-      <h3>🧾 Neto: $<span id="p-neto"></span></h3>
-
-      <div class="watermark">VICKASTERA</div>
-    </div>
-
   </div>
 
-  <script src="script.js"></script>
+  <div id="result" class="result"></div>
+
+</div>
+
+<!-- PDF -->
+<div id="pdf" class="pdf">
+
+  <h2>Liquidación Uruguay</h2>
+
+  <div class="row">Bruto: $<span id="p-bruto"></span></div>
+  <div class="row">IRPF: $<span id="p-irpf"></span></div>
+  <div class="row">FONASA: $<span id="p-fonasa"></span></div>
+  <div class="row">Extra: $<span id="p-extra"></span></div>
+
+  <div class="total">
+    Neto: $<span id="p-neto"></span>
+  </div>
+
+  <div class="watermark">VICKASTERA</div>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>
