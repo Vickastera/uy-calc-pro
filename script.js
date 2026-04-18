@@ -35,7 +35,6 @@ function calculate() {
   let irpf = calculateIRPF(salary);
   const fonasa = calculateFONASA(salary);
 
-  /* ajuste simple si tiene hijos */
   if (children) {
     irpf *= 0.9;
   }
@@ -83,11 +82,23 @@ function drawChart(irpf, fonasa, extra, neto) {
     options: {
       plugins: {
         legend: {
-          labels: {
-            color: "white"
-          }
+          display: false
         }
       }
     }
   });
+}
+
+/* PDF */
+async function downloadPDF() {
+  const element = document.querySelector(".app");
+
+  const canvas = await html2canvas(element, { scale: 2 });
+  const img = canvas.toDataURL("image/png");
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+
+  pdf.addImage(img, "PNG", 10, 10, 190, 0);
+  pdf.save("uy-calc-pro.pdf");
 }
