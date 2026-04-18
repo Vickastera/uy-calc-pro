@@ -1,58 +1,132 @@
 body {
+  margin: 0;
   font-family: Arial;
   background: #0f0f14;
   color: white;
-  text-align: center;
-  padding: 30px;
+  display: flex;
+  justify-content: center;
 }
 
 .app {
-  max-width: 400px;
-  margin: auto;
+  width: 380px;
+  padding: 30px;
+}
+
+.card {
+  background: #1c1c24;
+  padding: 20px;
+  border-radius: 12px;
 }
 
 input {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+/* segmented control */
+.segmented {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.segmented button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  cursor: pointer;
+  background: #2a2a35;
+  color: white;
+}
+
+.segmented .active {
+  background: #4c7dff;
 }
 
 button {
   padding: 10px;
-  margin: 5px;
+  margin-top: 5px;
   cursor: pointer;
+  width: 100%;
 }
 
-#result {
+/* toggle */
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  width: 40px;
+  height: 20px;
+  background: gray;
+  display: inline-block;
+  border-radius: 20px;
+  position: relative;
+}
+
+.slider::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: white;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 50%;
+  transition: .2s;
+}
+
+.toggle input:checked + .slider {
+  background: #4c7dff;
+}
+
+.toggle input:checked + .slider::after {
+  transform: translateX(20px);
+}
+
+.result {
   margin-top: 20px;
-  text-align: left;
   background: #1c1c24;
   padding: 15px;
   border-radius: 10px;
 }
 
-/* PDF STYLE (banco) */
-.pdf-card {
-  width: 400px;
-  padding: 25px;
-  background: white;
-  color: black;
+/* PDF */
+.pdf {
   position: absolute;
   left: -9999px;
-  border-radius: 10px;
-  font-family: Arial;
+  width: 400px;
+  background: white;
+  color: black;
+  padding: 20px;
 }
 
-.pdf-card h2 {
-  text-align: center;
+.row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  padding: 6px 0;
+}
+
+.total {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
 }
 
 .watermark {
   position: absolute;
-  font-size: 40px;
   opacity: 0.05;
+  font-size: 50px;
   transform: rotate(-30deg);
   top: 40%;
   left: 10%;
-  font-weight: bold;
 }
