@@ -1,5 +1,7 @@
 let chart;
 
+/* ===== CALCULOS ===== */
+
 function calculateIRPF(income) {
   if (income <= 40750) return 0;
 
@@ -22,6 +24,8 @@ function calculateFONASA(income) {
   return income * 0.06;
 }
 
+/* ===== MAIN ===== */
+
 function calculate() {
   const salary = Number(document.getElementById("salary").value);
   const type = document.getElementById("type").value;
@@ -41,10 +45,25 @@ function calculate() {
 
   let extra = 0;
 
+  /* ===== LO QUE YA TENÍAS ===== */
   if (type === "resignation") extra = salary * 0.2;
   if (type === "dismissal") extra = salary * 0.4;
 
+  /* ===== NUEVO: ANTIGÜEDAD (SIN ROMPER NADA) ===== */
+  if (type === "dismissal") {
+    const years = Number(document.getElementById("years")?.value);
+
+    if (years > 0) {
+      const cappedYears = Math.min(years, 6);
+
+      // suma a lo existente (no reemplaza)
+      extra += salary * cappedYears;
+    }
+  }
+
   const neto = salary - irpf - fonasa + extra;
+
+  /* ===== RESULTADO ===== */
 
   document.getElementById("result").innerHTML = `
     💰 Bruto: $${salary}<br>
@@ -57,6 +76,8 @@ function calculate() {
 
   drawChart(irpf, fonasa, extra, neto);
 }
+
+/* ===== CHART ===== */
 
 function drawChart(irpf, fonasa, extra, neto) {
   const ctx = document.getElementById("chart");
@@ -89,7 +110,8 @@ function drawChart(irpf, fonasa, extra, neto) {
   });
 }
 
-/* PDF */
+/* ===== PDF ===== */
+
 async function downloadPDF() {
   const element = document.querySelector(".app");
 
@@ -102,3 +124,17 @@ async function downloadPDF() {
   pdf.addImage(img, "PNG", 10, 10, 190, 0);
   pdf.save("uy-calc-pro.pdf");
 }
+
+/* ===== MOSTRAR INPUT ANTIGÜEDAD ===== */
+
+document.getElementById("type").addEventListener("change", function () {
+  const yearsInput = document.getElementById("years");
+
+  if (!yearsInput) return;
+
+  if (this.value === "dismissal") {
+    yearsInput.style.display = "block";
+  } else {
+    yearsInput.style.display = "none";
+  }
+});
