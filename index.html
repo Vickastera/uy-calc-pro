@@ -2,28 +2,31 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IRPF Uruguay Pro</title>
+  <title>Calculadora Sueldo Uruguay PRO</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <div class="container">
-    <h1>💰 Calculadora IRPF Uruguay</h1>
 
-    <p>Ingresá tu salario nominal mensual</p>
+    <h1>💰 Calculadora Sueldo Uruguay PRO</h1>
 
-    <input id="salary" type="number" placeholder="Ej: 50000">
+    <input id="salary" type="number" placeholder="Ingresá tu sueldo">
+
+    <div class="options">
+      <label>
+        <input type="checkbox" id="children">
+        Con hijos (deducción)
+      </label>
+    </div>
 
     <button onclick="calculate()">Calcular</button>
 
-    <div id="result" class="result"></div>
+    <div id="result"></div>
+
   </div>
 
-<script src="script.js"></script>
-</body>
-</html>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
