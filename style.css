@@ -10,7 +10,6 @@ body {
 }
 
 .app {
-  width: 100%;
   max-width: 420px;
   margin: auto;
   padding: 20px;
@@ -22,30 +21,27 @@ input, select {
   margin-top: 10px;
   border-radius: 10px;
   border: none;
-  font-size: 16px;
 }
 
 button {
   width: 100%;
   padding: 14px;
-  margin-top: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: none;
   background: #4c7dff;
   color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
 }
 
 #result {
   margin-top: 20px;
   background: #1c1c24;
-  padding: 16px;
-  border-radius: 12px;
+  padding: 15px;
+  border-radius: 10px;
 }
 
 canvas {
   margin-top: 20px;
-  width: 100% !important;
   background: white;
   border-radius: 10px;
 }
@@ -54,14 +50,13 @@ canvas {
 .toggle-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin: 15px 0;
+  margin-top: 15px;
 }
 
 .switch {
   position: relative;
   width: 50px;
-  height: 26px;
+  height: 25px;
 }
 
 .switch input {
@@ -71,9 +66,8 @@ canvas {
 .slider {
   position: absolute;
   background: #444;
-  border-radius: 30px;
+  border-radius: 25px;
   inset: 0;
-  transition: 0.3s;
 }
 
 .slider::before {
@@ -83,7 +77,7 @@ canvas {
   height: 20px;
   background: white;
   border-radius: 50%;
-  top: 3px;
+  top: 2.5px;
   left: 3px;
   transition: 0.3s;
 }
@@ -95,27 +89,3 @@ input:checked + .slider {
 input:checked + .slider::before {
   transform: translateX(24px);
 }
-
-/* leyenda */
-.legend {
-  margin-top: 12px;
-  font-size: 14px;
-}
-
-.legend div {
-  display: flex;
-  gap: 8px;
-  margin: 4px 0;
-  align-items: center;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.irpf { background: #ff5c5c; }
-.fonasa { background: #3b82f6; }
-.extra { background: #10b981; }
-.neto { background: #1e293b; }
