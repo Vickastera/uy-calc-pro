@@ -1,4 +1,6 @@
-alet chart;
+let chart;
+
+/* ===== CALCULOS ===== */
 
 function calculateIRPF(income) {
   if (income <= 40750) return 0;
@@ -13,21 +15,11 @@ function calculateFONASA(income) {
   return income * 0.06;
 }
 
+/* ===== MAIN ===== */
+
 function calculate() {
   const salary = Number(document.getElementById("salary").value);
-  window.addEventListener("DOMContentLoaded", () => {
-  const typeSelect = document.getElementById("type");
-  const yearsInput = document.getElementById("years");
-
-  if (!typeSelect || !yearsInput) return;
-
-  typeSelect.addEventListener("change", function () {
-    if (this.value === "dismissal") {
-      yearsInput.style.display = "block";
-    } else {
-      yearsInput.style.display = "none";
-    }
-  });
+  const type = document.getElementById("type").value;
   const children = document.getElementById("children").checked;
   const years = Number(document.getElementById("years").value);
 
@@ -70,6 +62,8 @@ function calculate() {
   drawChart(irpf, fonasa, extra, neto);
 }
 
+/* ===== CHART ===== */
+
 function drawChart(irpf, fonasa, extra, neto) {
   const ctx = document.getElementById("chart");
 
@@ -97,6 +91,8 @@ function drawChart(irpf, fonasa, extra, neto) {
   });
 }
 
+/* ===== PDF ===== */
+
 async function downloadPDF() {
   const element = document.querySelector(".app");
 
@@ -110,13 +106,24 @@ async function downloadPDF() {
   pdf.save("uy-calc-pro.pdf");
 }
 
-/* mostrar input antigüedad */
-document.getElementById("type").addEventListener("change", function () {
+/* ===== MOSTRAR ANTIGÜEDAD ===== */
+
+window.addEventListener("DOMContentLoaded", () => {
+  const typeSelect = document.getElementById("type");
   const yearsInput = document.getElementById("years");
 
-  if (this.value === "dismissal") {
+  if (!typeSelect || !yearsInput) return;
+
+  // mostrar si ya está en despido
+  if (typeSelect.value === "dismissal") {
     yearsInput.style.display = "block";
-  } else {
-    yearsInput.style.display = "none";
   }
+
+  typeSelect.addEventListener("change", function () {
+    if (this.value === "dismissal") {
+      yearsInput.style.display = "block";
+    } else {
+      yearsInput.style.display = "none";
+    }
+  });
 });
