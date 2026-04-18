@@ -44,10 +44,10 @@ button {
   border-radius: 12px;
 }
 
+/* GRAFICO */
 canvas {
   margin-top: 20px;
   width: 100% !important;
-  height: auto !important;
   background: white;
   border-radius: 10px;
 }
@@ -98,3 +98,27 @@ input:checked + .slider {
 input:checked + .slider::before {
   transform: translateX(24px);
 }
+
+/* LEYENDA */
+.legend {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.legend div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.irpf { background: #ff5c5c; }
+.fonasa { background: #3b82f6; }
+.extra { background: #10b981; }
+.neto { background: #1e293b; }
