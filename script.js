@@ -92,19 +92,76 @@ function drawChart(irpf, fonasa, extra, neto) {
 }
 
 /* ===== PDF ===== */
+function downloadPDF() {
+  const salary = Number(document.getElementById("salary").value);
+  const type = document.getElementById("type").value;
+  const children = document.getElementById("children").checked;
+  const years = Number(document.getElementById("years").value);
 
-async function downloadPDF() {
-  const element = document.querySelector(".app");
+  let irpf = calculateIRPF(salary);
+  const fonasa = calculateFONASA(salary);
 
-  const canvas = await html2canvas(element, { scale: 2 });
-  const img = canvas.toDataURL("image/png");
+  if (children) irpf *= 0.9;
+
+  let extra = 0;
+
+  if (type === "resignation") extra = salary * 0.2;
+
+  if (type === "dismissal") {
+    const cappedYears = Math.min(years || 0, 6);
+    extra = salary * cappedYears;
+  }
+
+  const neto = salary - irpf - fonasa + extra;
 
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF();
 
-  pdf.addImage(img, "PNG", 10, 10, 190, 0);
-  pdf.save("uy-calc-pro.pdf");
-}
+  /* ===== LOGO COMO MARCA DE AGUA ===== */
+  const img = new Image();
+  img.src = "logo.png"; // 👈 tu logo en el repo
+
+  img.onload = function () {
+
+    // marca de agua centrada
+    pdf.addImage(
+      img,
+      "PNG",
+      30,   // x
+      60,   // y
+      150,  // ancho
+      100,  // alto
+      undefined,
+      "FAST"
+    );
+
+    // bajar opacidad simulada (haciendo el contenido encima)
+    pdf.setTextColor(0, 0, 0);
+
+    /* ===== CONTENIDO ===== */
+
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(18);
+    pdf.text("UY Calc Pro", 20, 20);
+
+    pdf.setFontSize(12);
+    pdf.setFont("helvetica", "normal");
+
+    pdf.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 30);
+
+    pdf.text(`Bruto: $${salary}`, 20, 50);
+    pdf.text(`IRPF: $${irpf.toFixed(2)}`, 20, 60);
+    pdf.text(`FONASA: $${fonasa.toFixed(2)}`, 20, 70);
+    pdf.text(`Extra: $${extra.toFixed(2)}`, 20, 80);
+
+    pdf.line(20, 90, 190, 90);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(16);
+    pdf.text(`NETO: $${neto.toFixed(2)}`, 20, 105);
+
+    pdf.save("liquidacion-uy.pdf");
+  }
 
 /* ===== MOSTRAR ANTIGÜEDAD ===== */
 
