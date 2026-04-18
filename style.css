@@ -1,32 +1,40 @@
 body {
+  margin: 0;
   font-family: Arial;
   background: #0f0f14;
   color: white;
-  display: flex;
-  justify-content: center;
 }
 
+/* CONTENEDOR APP */
 .app {
-  width: 380px;
-  padding: 30px;
+  width: 100%;
+  max-width: 420px;
+  margin: auto;
+  padding: 20px;
 }
 
+/* INPUTS */
 input, select {
   width: 100%;
-  padding: 10px;
-  margin: 8px 0;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
 }
 
+/* BOTONES */
 button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin-top: 8px;
   background: #4c7dff;
   color: white;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
 }
 
+/* RESULTADO */
 #result {
   margin-top: 20px;
   background: #1c1c24;
@@ -34,8 +42,27 @@ button {
   border-radius: 10px;
 }
 
+/* GRAFICO */
 canvas {
   margin-top: 20px;
-  background: #fff;
+  background: white;
   border-radius: 10px;
+}
+
+/* PREVIEW */
+.preview-box {
+  margin-top: 15px;
+  background: white;
+  color: black;
+  padding: 15px;
+  border-radius: 10px;
+  min-height: 120px;
+}
+
+/* CHECK */
+.check {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 10px 0;
 }
