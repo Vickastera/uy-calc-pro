@@ -34,7 +34,6 @@ button {
   border: none;
   border-radius: 10px;
   font-size: 16px;
-  cursor: pointer;
 }
 
 #result {
@@ -44,7 +43,6 @@ button {
   border-radius: 12px;
 }
 
-/* GRAFICO */
 canvas {
   margin-top: 20px;
   width: 100% !important;
@@ -52,7 +50,7 @@ canvas {
   border-radius: 10px;
 }
 
-/* TOGGLE */
+/* toggle */
 .toggle-row {
   display: flex;
   justify-content: space-between;
@@ -76,7 +74,6 @@ canvas {
   border-radius: 30px;
   inset: 0;
   transition: 0.3s;
-  cursor: pointer;
 }
 
 .slider::before {
@@ -99,7 +96,7 @@ input:checked + .slider::before {
   transform: translateX(24px);
 }
 
-/* LEYENDA */
+/* leyenda */
 .legend {
   margin-top: 12px;
   font-size: 14px;
@@ -107,9 +104,9 @@ input:checked + .slider::before {
 
 .legend div {
   display: flex;
-  align-items: center;
   gap: 8px;
   margin: 4px 0;
+  align-items: center;
 }
 
 .dot {
