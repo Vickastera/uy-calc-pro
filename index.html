@@ -6,6 +6,10 @@
 
   <link rel="stylesheet" href="style.css" />
 
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -16,50 +20,26 @@
 
   <h1>💰 UY Calc Pro</h1>
 
-  <div class="card">
+  <input id="salary" type="number" placeholder="Sueldo bruto" />
 
-    <input id="salary" type="number" placeholder="Sueldo bruto" />
+  <select id="type">
+    <option value="salary">Sueldo normal</option>
+    <option value="resignation">Renuncia</option>
+    <option value="dismissal">Despido</option>
+  </select>
 
-    <!-- TIPO (mejor UX que select) -->
-    <div class="segmented">
-      <button onclick="setType('salary')" class="active" id="t-salary">Sueldo</button>
-      <button onclick="setType('resignation')" id="t-resignation">Renuncia</button>
-      <button onclick="setType('dismissal')" id="t-dismissal">Despido</button>
-    </div>
+  <label>
+    <input type="checkbox" id="children" />
+    Con hijos
+  </label>
 
-    <!-- HIJOS TOGGLE -->
-    <div class="toggle">
-      <label>
-        <input type="checkbox" id="children" />
-        <span class="slider"></span>
-      </label>
-      <span>Con hijos</span>
-    </div>
+  <button onclick="calculate()">Calcular</button>
+  <button onclick="downloadPDF()">Descargar PDF</button>
 
-    <button onclick="calculate()">Calcular</button>
-    <button onclick="downloadPDF()">Descargar PDF</button>
+  <div id="result"></div>
 
-  </div>
-
-  <div id="result" class="result"></div>
-
-</div>
-
-<!-- PDF -->
-<div id="pdf" class="pdf">
-
-  <h2>Liquidación Uruguay</h2>
-
-  <div class="row">Bruto: $<span id="p-bruto"></span></div>
-  <div class="row">IRPF: $<span id="p-irpf"></span></div>
-  <div class="row">FONASA: $<span id="p-fonasa"></span></div>
-  <div class="row">Extra: $<span id="p-extra"></span></div>
-
-  <div class="total">
-    Neto: $<span id="p-neto"></span>
-  </div>
-
-  <div class="watermark">VICKASTERA</div>
+  <!-- 📊 GRÁFICO -->
+  <canvas id="chart"></canvas>
 
 </div>
 
