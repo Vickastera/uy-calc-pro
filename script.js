@@ -1,11 +1,4 @@
-let type = "salary";
-
-function setType(t) {
-  type = t;
-
-  document.querySelectorAll(".segmented button").forEach(b => b.classList.remove("active"));
-  document.getElementById("t-" + t).classList.add("active");
-}
+let chart;
 
 function calculateIRPF(income) {
   if (income <= 40750) return 0;
@@ -22,7 +15,7 @@ function calculateFONASA(income) {
 
 function calculate() {
   const salary = Number(document.getElementById("salary").value);
-  const children = document.getElementById("children").checked;
+  const type = document.getElementById("type").value;
 
   if (!salary) return;
 
@@ -45,15 +38,37 @@ function calculate() {
     🧾 Neto: $${neto.toFixed(2)}
   `;
 
-  document.getElementById("p-bruto").innerText = salary;
-  document.getElementById("p-irpf").innerText = irpf.toFixed(2);
-  document.getElementById("p-fonasa").innerText = fonasa.toFixed(2);
-  document.getElementById("p-extra").innerText = extra.toFixed(2);
-  document.getElementById("p-neto").innerText = neto.toFixed(2);
+  drawChart(irpf, fonasa, extra, neto);
+}
+
+function drawChart(irpf, fonasa, extra, neto) {
+  const ctx = document.getElementById("chart");
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["IRPF", "FONASA", "Extra", "Neto"],
+      datasets: [{
+        data: [irpf, fonasa, extra, neto],
+        backgroundColor: ["#ff4d4d", "#4da6ff", "#00cc88", "#ffffff"]
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          labels: {
+            color: "white"
+          }
+        }
+      }
+    }
+  });
 }
 
 async function downloadPDF() {
-  const element = document.getElementById("pdf");
+  const element = document.querySelector(".app");
 
   const canvas = await html2canvas(element, { scale: 2 });
   const img = canvas.toDataURL("image/png");
@@ -62,5 +77,5 @@ async function downloadPDF() {
   const pdf = new jsPDF();
 
   pdf.addImage(img, "PNG", 10, 10, 190, 0);
-  pdf.save("liquidacion.pdf");
+  pdf.save("uy-calc-pro.pdf");
 }
