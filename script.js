@@ -1,4 +1,4 @@
-let chart;
+alet chart;
 
 function calculateIRPF(income) {
   if (income <= 40750) return 0;
@@ -15,7 +15,19 @@ function calculateFONASA(income) {
 
 function calculate() {
   const salary = Number(document.getElementById("salary").value);
-  const type = document.getElementById("type").value;
+  window.addEventListener("DOMContentLoaded", () => {
+  const typeSelect = document.getElementById("type");
+  const yearsInput = document.getElementById("years");
+
+  if (!typeSelect || !yearsInput) return;
+
+  typeSelect.addEventListener("change", function () {
+    if (this.value === "dismissal") {
+      yearsInput.style.display = "block";
+    } else {
+      yearsInput.style.display = "none";
+    }
+  });
   const children = document.getElementById("children").checked;
   const years = Number(document.getElementById("years").value);
 
