@@ -1,13 +1,11 @@
 let chart;
 
 /* CALCULOS */
-
 function calculateIRPF(income) {
   if (income <= 40750) return 0;
   if (income <= 58250) return (income - 40750) * 0.10;
   if (income <= 87500)
     return 17500 * 0.10 + (income - 58250) * 0.15;
-
   return 17500 * 0.10 + 29250 * 0.15 + (income - 87500) * 0.24;
 }
 
@@ -16,7 +14,6 @@ function calculateFONASA(income) {
 }
 
 /* MAIN */
-
 function calculate() {
   const salary = Number(document.getElementById("salary").value);
   const type = document.getElementById("type").value;
@@ -30,13 +27,14 @@ function calculate() {
 
   let irpf = calculateIRPF(salary);
   const fonasa = calculateFONASA(salary);
-
   if (children) irpf *= 0.9;
 
   let extra = 0;
+  let extraLabel = "";
 
   if (type === "resignation") {
     extra = salary * 0.2;
+    extraLabel = "Compensación por renuncia";
   }
 
   if (type === "dismissal") {
@@ -44,9 +42,9 @@ function calculate() {
       document.getElementById("result").innerHTML = "Ingresá años trabajados";
       return;
     }
-
     const cappedYears = Math.min(years, 6);
     extra = salary * cappedYears;
+    extraLabel = "Indemnización por despido";
   }
 
   const neto = salary - irpf - fonasa + extra;
@@ -56,58 +54,73 @@ function calculate() {
     📊 IRPF: $${irpf.toFixed(2)}<br>
     🏥 FONASA: $${fonasa.toFixed(2)}<br>
     ${type === "dismissal" ? `📅 Años: ${years}<br>` : ""}
-    ➕ Extra: $${extra.toFixed(2)}<br>
+    ${extra > 0 ? `➕ ${extraLabel}: $${extra.toFixed(2)}<br>` : ""}
     <hr>
     🧾 Neto: $${neto.toFixed(2)}
   `;
 
-  drawChart(irpf, fonasa, extra, neto);
+  drawChart(irpf, fonasa, extra, neto, extraLabel);
 }
 
 /* GRAFICO */
-
-function drawChart(irpf, fonasa, extra, neto) {
+function drawChart(irpf, fonasa, extra, neto, extraLabel) {
   const ctx = document.getElementById("chart");
-
   if (chart) chart.destroy();
+
+  const labels = ["IRPF", "FONASA"];
+  const data = [irpf, fonasa];
+  const colors = ["#ff5c5c", "#3b82f6"];
+
+  if (extra > 0) {
+    labels.push(extraLabel || "Extra");
+    data.push(extra);
+    colors.push("#10b981");
+  }
+
+  labels.push("Neto");
+  data.push(neto);
+  colors.push("#1e293b");
 
   chart = new Chart(ctx, {
     type: "doughnut",
     data: {
-      labels: ["IRPF", "FONASA", "Extra", "Neto"],
+      labels,
       datasets: [{
-        data: [irpf, fonasa, extra, neto],
-        backgroundColor: [
-          "#ff5c5c",
-          "#3b82f6",
-          "#10b981",
-          "#1e293b"
-        ]
+        data,
+        backgroundColor: colors
       }]
     },
     options: {
       plugins: {
-        legend: { display: false }
+        legend: { display: true }
       }
     }
   });
 }
 
-/* PDF PRO */
-
+/* PDF */
 function downloadPDF() {
   const salary = Number(document.getElementById("salary").value);
   const type = document.getElementById("type").value;
+  const children = document.getElementById("children").checked;
   const years = Number(document.getElementById("years").value);
 
   let irpf = calculateIRPF(salary);
   const fonasa = calculateFONASA(salary);
+  if (children) irpf *= 0.9;
 
   let extra = 0;
+  let extraLabel = "";
+
+  if (type === "resignation") {
+    extra = salary * 0.2;
+    extraLabel = "Compensación por renuncia";
+  }
 
   if (type === "dismissal") {
     const cappedYears = Math.min(years || 0, 6);
     extra = salary * cappedYears;
+    extraLabel = "Indemnización por despido";
   }
 
   const neto = salary - irpf - fonasa + extra;
@@ -117,25 +130,23 @@ function downloadPDF() {
 
   pdf.setFontSize(18);
   pdf.text("UY Calc Pro", 20, 20);
-
   pdf.setFontSize(12);
   pdf.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 30);
-
-  pdf.text(`Bruto: $${salary}`, 20, 50);
-  pdf.text(`IRPF: $${irpf.toFixed(2)}`, 20, 60);
-  pdf.text(`FONASA: $${fonasa.toFixed(2)}`, 20, 70);
-  pdf.text(`Extra: $${extra.toFixed(2)}`, 20, 80);
-
-  pdf.line(20, 90, 190, 90);
-
+  pdf.text(`Tipo: ${type === "salary" ? "Sueldo normal" : type === "resignation" ? "Renuncia" : "Despido"}`, 20, 40);
+  pdf.text(`Bruto: $${salary}`, 20, 55);
+  pdf.text(`IRPF: $${irpf.toFixed(2)}`, 20, 65);
+  pdf.text(`FONASA: $${fonasa.toFixed(2)}`, 20, 75);
+  if (extra > 0) {
+    pdf.text(`${extraLabel}: $${extra.toFixed(2)}`, 20, 85);
+  }
+  pdf.line(20, 95, 190, 95);
   pdf.setFontSize(16);
-  pdf.text(`NETO: $${neto.toFixed(2)}`, 20, 105);
+  pdf.text(`NETO: $${neto.toFixed(2)}`, 20, 110);
 
   pdf.save("liquidacion.pdf");
 }
 
 /* MOSTRAR ANTIGÜEDAD */
-
 const typeSelect = document.getElementById("type");
 const yearsInput = document.getElementById("years");
 
