@@ -3,12 +3,16 @@
 }
 
 body {
+  text-align: center;
   margin: 0;
   font-family: Arial;
   background: #0f0f14;
   color: white;
 }
-
+a {
+  text-decoration: none; 
+  color: inherit;     
+}
 .app {
   max-width: 420px;
   margin: auto;
@@ -41,7 +45,8 @@ button {
 }
 
 canvas {
-  margin-top: 20px;
+  margin: 20px auto;   
+  padding: 40px;       
   background: white;
   border-radius: 10px;
 }
