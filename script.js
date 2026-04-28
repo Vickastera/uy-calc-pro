@@ -19,9 +19,9 @@ function calculate() {
   const type = document.getElementById("type").value;
   const children = document.getElementById("children").checked;
   const years = Number(document.getElementById("years").value);
-
-  if (!salary) {
+  if (!salary || salary <= 0 || salary > 9999999) {
     document.getElementById("result").innerHTML = "Ingresá un sueldo válido";
+    document.getElementById("downloadPDF").disabled = true; 
     return;
   }
 
@@ -38,8 +38,8 @@ function calculate() {
   }
 
   if (type === "dismissal") {
-    if (!years) {
-      document.getElementById("result").innerHTML = "Ingresá años trabajados";
+    if (!years || years < 0 || years > 60) {
+      document.getElementById("result").innerHTML = "Ingresá años trabajados (0 - 60)";
       return;
     }
     const cappedYears = Math.min(years, 6);
@@ -58,7 +58,7 @@ function calculate() {
     <hr>
     🧾 Neto: $${neto.toFixed(2)}
   `;
-
+  document.getElementById("downloadPDF").disabled = false; 
   drawChart(irpf, fonasa, extra, neto, extraLabel);
 }
 
@@ -145,7 +145,6 @@ function downloadPDF() {
 
   pdf.save("liquidacion.pdf");
 }
-
 /* MOSTRAR ANTIGÜEDAD */
 const typeSelect = document.getElementById("type");
 const yearsInput = document.getElementById("years");
