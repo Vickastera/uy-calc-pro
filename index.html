@@ -12,21 +12,20 @@
 </head>
 
 <body>
-
 <div class="app">
 
   <h1>💰 UY Calc Pro</h1>
-
-  <input id="salary" type="number" placeholder="Sueldo bruto">
-
+<a href="https://www.gub.uy/ministerio-trabajo-seguridad-social/comunicacion/noticias/salario-minimo-nacional-24572-desde-1o-enero-2026" target="_blank" title="Link para ir al gub.uy"> 🏦Sueldo minimo actual: $24.572</a>
+  <input id="salary" oninput="if (this.value.length >= 7) this.value = this.value.slice(0, 7);" onkeydown="if (event.key === 'e' || event.key === 'E' || event.key === '-') { return false;}" min = "0" max="9999999" type="number" placeholder="Sueldo bruto">
   <select id="type">
     <option value="salary">Sueldo normal</option>
     <option value="resignation">Renuncia</option>
     <option value="dismissal">Despido</option>
+
   </select>
 
   <!-- ANTIGÜEDAD -->
-  <input id="years" type="number" placeholder="Años trabajados" style="display:none;">
+  <input id="years" type="number" oninput="if (this.value.length >= 2) this.value = this.value.slice(0, 2); if (this.value >60) this.value = Math.min(this.value, 60);" onkeydown="if (event.key === 'e' || event.key === 'E' || event.key === '-') { return false;}" min = "0" max="60" placeholder="Años trabajados (máximo 60)" style="display:none;">
 
   <!-- HIJOS -->
   <div class="toggle-row">
@@ -38,14 +37,13 @@
   </div>
 
   <button onclick="calculate()">Calcular</button>
-  <button onclick="downloadPDF()">Descargar PDF</button>
+  <button id="downloadPDF" onclick="downloadPDF()" disabled>Descargar PDF</button>
 
   <div id="result"></div>
 
   <canvas id="chart"></canvas>
 
 </div>
-
 <!-- SCRIPT SIEMPRE AL FINAL -->
 <script src="script.js"></script>
 
