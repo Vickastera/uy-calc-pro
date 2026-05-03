@@ -17,10 +17,14 @@
   <h1>💰 UY Calc Pro</h1>
 <a href="https://www.gub.uy/ministerio-trabajo-seguridad-social/comunicacion/noticias/salario-minimo-nacional-24572-desde-1o-enero-2026" target="_blank" title="Link para ir al gub.uy"> 🏦Sueldo minimo actual: $24.572</a>
   <input id="salary" oninput="if (this.value.length >= 7) this.value = this.value.slice(0, 7);" onkeydown="if (event.key === 'e' || event.key === 'E' || event.key === '-') { return false;}" min = "0" max="9999999" type="number" placeholder="Sueldo bruto">
+  <input id="months" oninput="if (this.value.length >= 2) this.value = this.value.slice(0, 2); if (this.value < 1) this.value = 1; if (this.value >12) this.value = Math.min(this.value, 12);" onkeydown="if (event.key === 'e' || event.key === 'E' || event.key === '-') { return false;}" min = "1" max="12" type="number" placeholder="Meses trabajados este año (1-12)">
+  <input id="days" oninput="if (this.value.length >= 2) this.value = this.value.slice(0, 2); if (this.value < 1) this.value = 1; if (this.value >30) this.value = Math.min(this.value, 30);" onkeydown="if (event.key === 'e' || event.key === 'E' || event.key === '-') { return false;}" min = "1" max="30" type="number" placeholder="Días de licencia (1-30)" style="display:none;">
+
   <select id="type">
     <option value="salary">Sueldo normal</option>
     <option value="resignation">Renuncia</option>
     <option value="dismissal">Despido</option>
+  
 
   </select>
 
@@ -33,6 +37,14 @@
     <label class="switch">
       <input type="checkbox" id="children">
       <span class="slider"></span>
+    </label>
+  </div>
+  <!-- VACACIONES -->
+  <div class="toggle-row">
+    <span>Incluir salario vacacional</span>
+    <label class="switch">
+    <input type="checkbox" id="vacation">
+    <span class="slider"></span>
     </label>
   </div>
 

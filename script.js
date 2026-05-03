@@ -12,19 +12,40 @@ function calculateIRPF(income) {
 function calculateFONASA(income) {
   return income * 0.06;
 }
-
+function aguinaldo(salary, months) {
+  return (salary * months) / 12;
+}
+function calculateVacation(neto, days) {
+  return (neto / 30) * days;
+}
 /* MAIN */
 function calculate() {
   const salary = Number(document.getElementById("salary").value);
   const type = document.getElementById("type").value;
   const children = document.getElementById("children").checked;
+  const vacation  = document.getElementById("vacation").checked;
   const years = Number(document.getElementById("years").value);
+  const months = Number(document.getElementById("months").value);
+  const days = Number(document.getElementById("days").value);
+
   if (!salary || salary <= 0 || salary > 9999999) {
     document.getElementById("result").innerHTML = "Ingresá un sueldo válido";
     document.getElementById("downloadPDF").disabled = true; 
     return;
   }
-
+  if (!months || months <= 0 || months > 12) {
+    document.getElementById("result").innerHTML = "Ingresá meses válidos (1 - 12)";
+    document.getElementById("downloadPDF").disabled = true;
+    return;
+  }
+  if (vacation){
+if (!days || days < 1 || days > 30) {
+    document.getElementById("result").innerHTML = "Ingresá días válidos (1 - 30)";
+    document.getElementById("downloadPDF").disabled = true;
+    return;
+  }
+  }
+  
   let irpf = calculateIRPF(salary);
   const fonasa = calculateFONASA(salary);
   if (children) irpf *= 0.9;
@@ -53,14 +74,20 @@ function calculate() {
     💰 Bruto: $${salary}<br>
     📊 IRPF: $${irpf.toFixed(2)}<br>
     🏥 FONASA: $${fonasa.toFixed(2)}<br>
+    📆 Meses: ${months}<br>
+    ${document.getElementById("vacation").checked ? `📅 Días: ${days}<br>` : ""}
     ${type === "dismissal" ? `📅 Años: ${years}<br>` : ""}
+    ${type === "vacation" ? `📅 Días de licencia: ${days}<br>` : ""}
     ${extra > 0 ? `➕ ${extraLabel}: $${extra.toFixed(2)}<br>` : ""}
     <hr>
-    🧾 Neto: $${neto.toFixed(2)}
+    🧾 Neto: $${neto.toFixed(2)}<br>
+    💵 Aguinaldo: $${aguinaldo(salary, months).toFixed(2)} <br>
+   ${document.getElementById("vacation").checked ? `🏖️ Salario vacacional: $${calculateVacation(neto, days).toFixed(2)}` : ""}
   `;
   document.getElementById("downloadPDF").disabled = false; 
   drawChart(irpf, fonasa, extra, neto, extraLabel);
 }
+
 
 /* GRAFICO */
 function drawChart(irpf, fonasa, extra, neto, extraLabel) {
@@ -104,6 +131,8 @@ function downloadPDF() {
   const type = document.getElementById("type").value;
   const children = document.getElementById("children").checked;
   const years = Number(document.getElementById("years").value);
+  const months = Number(document.getElementById("months").value);
+  const days = Number(document.getElementById("days").value);
 
   let irpf = calculateIRPF(salary);
   const fonasa = calculateFONASA(salary);
@@ -134,6 +163,10 @@ function downloadPDF() {
   pdf.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 30);
   pdf.text(`Tipo: ${type === "salary" ? "Sueldo normal" : type === "resignation" ? "Renuncia" : "Despido"}`, 20, 40);
   pdf.text(`Bruto: $${salary}`, 20, 55);
+  pdf.text(`Meses trabajados: ${months}`, 20, 45);
+  if (document.getElementById("vacation").checked) {
+  pdf.text(`Días de licencia: ${days}`, 20, 50);
+  }
   pdf.text(`IRPF: $${irpf.toFixed(2)}`, 20, 65);
   pdf.text(`FONASA: $${fonasa.toFixed(2)}`, 20, 75);
   if (extra > 0) {
@@ -142,8 +175,11 @@ function downloadPDF() {
   pdf.line(20, 95, 190, 95);
   pdf.setFontSize(16);
   pdf.text(`NETO: $${neto.toFixed(2)}`, 20, 110);
-
-  pdf.save("liquidacion.pdf");
+  pdf.text(`Aguinaldo: $${aguinaldo(salary, months).toFixed(2)}`, 20, 120);
+  if (document.getElementById("vacation").checked) {
+    pdf.text(`Salario vacacional: $${calculateVacation(neto, days).toFixed(2)}`, 20, 130);
+  }
+  pdf.save("liquidacion_(" + new Date().toLocaleDateString() + "_" + new Date().toLocaleTimeString() + ").pdf");
 }
 /* MOSTRAR ANTIGÜEDAD */
 const typeSelect = document.getElementById("type");
@@ -156,3 +192,15 @@ typeSelect.addEventListener("change", function () {
     yearsInput.style.display = "none";
   }
 });
+  /* MOSTRAR LICENCIA */
+const vacationCheckbox = document.getElementById("vacation");
+const daysInput = document.getElementById("days");
+
+vacationCheckbox.addEventListener("change", function () {
+    if (this.checked) { 
+        daysInput.style.display = "block";
+    } else {
+        daysInput.style.display = "none";
+    }
+});
+
