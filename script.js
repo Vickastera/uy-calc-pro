@@ -13,9 +13,9 @@ function calculateIRPF(income) {
 }
 
 function calculateFONASA(income, children, spouse) {
-if (children && spouse) return income * 0.8;
-if (children && !spouse) return income * 0.6;
-if (!children && spouse) return income * 0.65;
+if (children && spouse) return income * 0.08;
+if (children && !spouse) return income * 0.06;
+if (!children && spouse) return income * 0.065;
 return income * 0.045 ;
 }
 function calculateFRL(income) {
