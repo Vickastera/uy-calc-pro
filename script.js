@@ -2,15 +2,29 @@ let chart;
 
 /* CALCULOS */
 function calculateIRPF(income) {
-  if (income <= 40750) return 0;
-  if (income <= 58250) return (income - 40750) * 0.10;
-  if (income <= 87500)
-    return 17500 * 0.10 + (income - 58250) * 0.15;
-  return 17500 * 0.10 + 29250 * 0.15 + (income - 87500) * 0.24;
+  if (income <= 48048) return 0; 
+  if (income <= 68640) return (income - 48048) * 0.10;
+  if (income <= 102960) return 2059.20 + (income - 68640) * 0.15; 
+  if (income <= 205920) return 2059.20 + 5148.00 + (income - 102960) * 0.24; 
+  if (income <= 343200) return 2059.20 + 5148.00 + 24710.40 + (income - 205920) * 0.25; 
+  if (income <= 514800) return 2059.20 + 5148.00 + 24710.40 + 34320.00 + (income - 343200) * 0.27; 
+  if (income <= 789360) return 2059.20 + 5148.00 + 24710.40 + 34320.00 + 46332.00 + (income - 514800) * 0.31; 
+  return 2059.20 + 5148.00 + 24710.40 + 34320.00 + 46332.00 + 85113.60 + (income - 789360) * 0.36; 
 }
 
-function calculateFONASA(income) {
-  return income * 0.06;
+function calculateFONASA(income, children, spouse) {
+if (children && spouse) return income * 0.08;
+if (children && !spouse) return income * 0.06;
+if (!children && spouse) return income * 0.065;
+return income * 0.045 ;
+}
+function calculateFRL(income) {
+return income * 0.0010;
+}
+
+function calculateBps(income) {
+  return income * 0.15;
+
 }
 function aguinaldoBruto(salary, months) {
   return (salary * months) / 12;
@@ -26,6 +40,7 @@ function calculate() {
   const salary = Number(document.getElementById("salary").value);
   const type = document.getElementById("type").value;
   const children = document.getElementById("children").checked;
+  const spouse = document.getElementById("spouse").checked;
   const vacation  = document.getElementById("vacation").checked;
   const years = Number(document.getElementById("years").value);
   const months = Number(document.getElementById("months").value);
@@ -50,11 +65,12 @@ if (!days || days < 1 || days > 30) {
   }
   
   let irpf = calculateIRPF(salary);
-  const fonasa = calculateFONASA(salary);
+  const fonasa = calculateFONASA(salary, children, spouse);
   if (children) irpf *= 0.9;
-
+  const frl = calculateFRL(salary);
   let extra = 0;
   let extraLabel = "";
+  let bps = calculateBps(salary);
 
   if (type === "resignation") {
     extra = salary * 0.2;
@@ -71,13 +87,16 @@ if (!days || days < 1 || days > 30) {
     extraLabel = "Indemnización por despido";
   }
 
-  const neto = salary - irpf - fonasa + extra;
+  const neto = salary - irpf - fonasa - bps - frl + extra;
+  const netoWithoutExtra = salary - irpf - fonasa - bps - frl;
 
   document.getElementById("result").innerHTML = `
     💰 Bruto: $${salary}<br>
     📊 IRPF: $${irpf.toFixed(2)}<br>
     🏥 FONASA: $${fonasa.toFixed(2)}<br>
     📆 Meses: ${months}<br>
+    📉 BPS: $${bps.toFixed(2)}<br>
+    🕒 FRL: $${frl.toFixed(2)}<br>
     ${document.getElementById("vacation").checked ? `📅 Días: ${days}<br>` : ""}
     ${type === "dismissal" ? `📅 Años: ${years}<br>` : ""}
     ${type === "vacation" ? `📅 Días de licencia: ${days}<br>` : ""}
@@ -85,22 +104,22 @@ if (!days || days < 1 || days > 30) {
     <hr>
     🧾 Neto: $${neto.toFixed(2)}<br>
     💵 Aguinaldo Bruto: $${aguinaldoBruto(salary, months).toFixed(2)} <br>
-    💲 Aguinaldo Neto: $${aguinaldoNeto(neto, months).toFixed(2)} <br>
-   ${document.getElementById("vacation").checked ? `🏖️ Salario vacacional: $${calculateVacation(neto, days).toFixed(2)}` : ""}
+    💲 Aguinaldo Neto: $${aguinaldoNeto(netoWithoutExtra, months).toFixed(2)} <br>
+   ${document.getElementById("vacation").checked ? `🏖️ Salario vacacional: $${calculateVacation(netoWithoutExtra, days).toFixed(2)}` : ""}
   `;
-  document.getElementById("downloadPDF").disabled = false; 
-  drawChart(irpf, fonasa, extra, neto, extraLabel);
+    document.getElementById("downloadPDF").disabled = false; 
+  drawChart(irpf, fonasa, extra, neto, bps, frl, extraLabel);
 }
 
 
 /* GRAFICO */
-function drawChart(irpf, fonasa, extra, neto, extraLabel) {
+function drawChart(irpf, fonasa, extra, neto, bps, frl, extraLabel) {
   const ctx = document.getElementById("chart");
   if (chart) chart.destroy();
 
-  const labels = ["IRPF", "FONASA"];
-  const data = [irpf, fonasa];
-  const colors = ["#ff5c5c", "#3b82f6"];
+  const labels = ["IRPF", "FONASA", "BPS", "FRL"];
+  const data = [irpf, fonasa, bps, frl];
+  const colors = ["#ff5c5c", "#3b82f6", "#f59e0b", "#8b5cf6"];
 
   if (extra > 0) {
     labels.push(extraLabel || "Extra");
@@ -129,20 +148,24 @@ function drawChart(irpf, fonasa, extra, neto, extraLabel) {
   });
 }
 
+
 /* PDF */
 function downloadPDF() {
   const salary = Number(document.getElementById("salary").value);
   const type = document.getElementById("type").value;
   const children = document.getElementById("children").checked;
+  const spouse = document.getElementById("spouse").checked;
   const years = Number(document.getElementById("years").value);
   const months = Number(document.getElementById("months").value);
   const days = Number(document.getElementById("days").value);
 
   let irpf = calculateIRPF(salary);
-  const fonasa = calculateFONASA(salary);
+  const fonasa = calculateFONASA(salary, children, spouse);
+  const frl = calculateFRL(salary);
   if (children) irpf *= 0.9;
-
+  let bps = calculateBps(salary);
   let extra = 0;
+
   let extraLabel = "";
 
   if (type === "resignation") {
@@ -156,7 +179,9 @@ function downloadPDF() {
     extraLabel = "Indemnización por despido";
   }
 
-  const neto = salary - irpf - fonasa + extra;
+  const neto = salary - irpf - fonasa - bps - frl + extra;
+  const netoWithoutExtra = salary - irpf - fonasa - bps - frl;
+
 
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF();
@@ -173,16 +198,18 @@ function downloadPDF() {
   }
   pdf.text(`IRPF: $${irpf.toFixed(2)}`, 20, 65);
   pdf.text(`FONASA: $${fonasa.toFixed(2)}`, 20, 75);
+  pdf.text(`BPS: $${bps.toFixed(2)}`, 20, 85);
+  pdf.text(`FRL: $${frl.toFixed(2)}`, 20, 95);
   if (extra > 0) {
-    pdf.text(`${extraLabel}: $${extra.toFixed(2)}`, 20, 85);
+    pdf.text(`${extraLabel}: $${extra.toFixed(2)}`, 20, 105);
   }
-  pdf.line(20, 95, 190, 95);
+  pdf.line(20, 115, 190, 115);
   pdf.setFontSize(16);
-  pdf.text(`NETO: $${neto.toFixed(2)}`, 20, 110);
-  pdf.text(`Aguinaldo Bruto: $${aguinaldoBruto(salary, months).toFixed(2)}`, 20, 120);
-  pdf.text(`Aguinaldo Neto: $${aguinaldoNeto(neto, months).toFixed(2)}`, 20, 130);
+  pdf.text(`NETO: $${neto.toFixed(2)}`, 20, 120);
+  pdf.text(`Aguinaldo Bruto: $${aguinaldoBruto(salary, months).toFixed(2)}`, 20, 130);
+  pdf.text(`Aguinaldo Neto: $${aguinaldoNeto(netoWithoutExtra, months).toFixed(2)}`, 20, 140);
   if (document.getElementById("vacation").checked) {
-    pdf.text(`Salario vacacional: $${calculateVacation(neto, days).toFixed(2)}`, 20, 140);
+    pdf.text(`Salario vacacional: $${calculateVacation(netoWithoutExtra, days).toFixed(2)}`, 20, 150);
   }
   pdf.save("liquidacion_(" + new Date().toLocaleDateString() + "_" + new Date().toLocaleTimeString() +").pdf");
 }
